@@ -1,0 +1,10 @@
+GET https://data-api.binance.vision/api/v3/exchangeInfo
+
+###
+GET https://data-api.binance.vision/api/v3/ticker/24hr?symbol=ETHBTC
+
+###
+GET https://data-api.binance.vision/api/v3/ticker/price?symbol=ETHBTC
+
+###
+GET https://data-api.binance.vision/api/v3/trades?symbol=LTCBTC
