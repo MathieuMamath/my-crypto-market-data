@@ -3,32 +3,72 @@ import { GoSync } from 'react-icons/go';
 import styled from 'styled-components';
 
 import { useFetchSymbolsQuery } from '../store';
-import SymbolDropdown from './SymbolDropdown';
 
 const SymbolFormWrapper = styled.form`
   display: flex;
 `;
 
-function SymbolForm() {
-  const {data, isLoading} = useFetchSymbolsQuery();
-  const [selectedSymbol, setSelectedSymbol] = useState<string>('');
+const Selector = styled.div`
+  height: 3rem;
+  width: 10rem;
+  border: black 1px solid;
+  border-radius: 4px;
+`;
+
+const SelectorList = styled.div`
+  max-height: 10rem;
+  overflow-y: scroll;
+`;
+
+type SymbolFormProps = {
+  value: string;
+  onSubmit: (a: string) => void;
+};
+
+function SymbolForm({ value, onSubmit }: SymbolFormProps) {
+  const [selectedSymbol, setSelectedSymbol] = useState<string>(value);
+  const [isOpen, setIsOpen] = useState<boolean>(false);
+  const {data, error, isLoading} = useFetchSymbolsQuery();
 
   const handleSubmit = (e : FormEvent) => {
     e.preventDefault();
+    onSubmit(selectedSymbol);
   };
 
   const handleChange = (symbol: string) => {
     setSelectedSymbol(symbol);
-  }
+    setIsOpen(false);
+  };
+
+  const handleOpen = () => {
+    setIsOpen(!isOpen);
+  };
+
+  const renderedSymbols = data?.map(symbol => {
+    return <div key={symbol.name} onClick={() => handleChange(symbol.name)}>
+      {symbol.name}
+    </div>
+  });
 
   if (isLoading) {
-    return <GoSync/>
+    return <GoSync/>;
+  } else if (error) {
+    return <div>Error while fetching symbols...</div>;
   }
 
   return (
     <SymbolFormWrapper onSubmit={(e) => handleSubmit(e)}>
       <label className="flex mr-3">Symbol :</label>
-      <SymbolDropdown symbols={data || []} selectedSymbol={selectedSymbol} onChange={handleChange}/>
+
+      <Selector onClick={handleOpen} className="w-8">
+        {selectedSymbol}
+      </Selector>
+
+      {isOpen &&
+        <SelectorList>
+          {renderedSymbols}
+        </SelectorList>
+      }
       <button>Submit</button>
     </SymbolFormWrapper>
   );
