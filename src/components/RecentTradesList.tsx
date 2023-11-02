@@ -1,7 +1,13 @@
 import { useState } from 'react';
 import { GoSync, GoTriangleDown, GoTriangleUp } from 'react-icons/go';
+import { format } from 'date-fns'
 
 import { useFetchRecentTradesQuery } from '../store';
+import {
+  RecentTradesWrapper,
+  RecentTradesTable,
+  RecentTradesTableHeader
+} from './RecentTrades.styles.ts';
 
 function RecentTrades({ symbol }: { symbol: string}) {
   const { data, error, isFetching } = useFetchRecentTradesQuery(symbol);
@@ -23,6 +29,12 @@ function RecentTrades({ symbol }: { symbol: string}) {
     { label:'Time', key: 'time' },
   ];
 
+  const getTime = (timestamp: number): string => {
+    const date = format(new Date(timestamp), 'yyyy/MM/dd HH:mm:ss');
+
+    return date;
+  };
+
   const renderedRows = Object.values(data)
     .sort((a, b) => {
       const reverseOrder = sortOrder === 'asc' ? 1 : -1;
@@ -30,11 +42,13 @@ function RecentTrades({ symbol }: { symbol: string}) {
       return (a[sortBy] - b[sortBy]) * reverseOrder;
     })
     .map(rowData => {
-      return <tr className="border-b" key={rowData.id}>
-        <td className="p-2">{rowData.price}</td>
-        <td className="p-2">{rowData.qty}</td>
-        <td className="p-2">{rowData.quoteQty}</td>
-        <td className="p-2">{rowData.time}</td>
+      return <tr key={rowData.id}>
+        <td className={`${rowData.isBuyerMaker === true ? 'green' : 'red'}`} title={rowData.isBuyerMaker === true ? 'Is buyer maker': ''}>
+          {rowData.price}
+        </td>
+        <td>{rowData.qty}</td>
+        <td>{rowData.quoteQty}</td>
+        <td>{getTime(rowData.time)}</td>
       </tr>;
     });
 
@@ -43,8 +57,6 @@ function RecentTrades({ symbol }: { symbol: string}) {
       setSortOrder('asc');
     } else if (sortOrder === 'asc') {
       setSortOrder('desc');
-    } else if (sortOrder === 'desc') {
-      setSortOrder('');
     } else {
       setSortOrder('asc');
     }
@@ -52,12 +64,13 @@ function RecentTrades({ symbol }: { symbol: string}) {
     setSortBy(column);
   };
 
+
   const renderedHeaderSorting = (key: string) => {
     if (sortBy !== key) {
-      return <>
+      return <div>
         <GoTriangleUp/>
         <GoTriangleDown/>
-      </>;
+      </div>;
     }
 
     if (sortOrder === '') {
@@ -78,25 +91,29 @@ function RecentTrades({ symbol }: { symbol: string}) {
 
   const renderHeader = headers.map(header =>
     <th key={header.key} onClick={() => handleSortBy(header.key)}>
-      {renderedHeaderSorting(header.key)}
-      {header.label}
+      <RecentTradesTableHeader>
+        <div className="mr-2">
+          {renderedHeaderSorting(header.key)}
+        </div>
+        <div className={`${header.key === sortBy && 'sorted'}`}>{header.label}</div>
+      </RecentTradesTableHeader>
     </th>
   );
 
   return (
-    <div>
-      Recent Trades : {symbol}
-      <table className="table-auto border-spacing-2">
+    <RecentTradesWrapper>
+      <h2>Recent Trades</h2>
+      <RecentTradesTable>
         <thead>
-          <tr className="border-b-2">
+          <tr>
             {renderHeader}
           </tr>
         </thead>
         <tbody>
           {renderedRows}
         </tbody>
-      </table>
-    </div>
+      </RecentTradesTable>
+    </RecentTradesWrapper>
   );
 }
 
