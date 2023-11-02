@@ -46,6 +46,7 @@ function SymbolForm({ value, onSubmit }: SymbolFormProps) {
 
   const handleChange = (e : FormEvent<HTMLInputElement>) => {
     setSelectedSymbol(e.currentTarget.value);
+    setIsOpen(true);
     setSymbolError('');
   };
 

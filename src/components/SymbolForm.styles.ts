@@ -19,7 +19,7 @@ export const Label = styled.label`
 `;
 
 export const Error = styled.div`
-  color: #e53e3e;
+  color: rgb(244 63 94);
   font-size: 10px;
   position: absolute;
 `;
@@ -35,7 +35,7 @@ export const Dropdown = styled.input`
   padding-left: 20px;
 
   &.error {
-    border: #e53e3e solid 1px;
+    border: rgb(244 63 94) solid 1px;
   }
 `;
 
