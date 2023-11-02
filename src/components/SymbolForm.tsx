@@ -1,24 +1,17 @@
 import { FormEvent, useState } from 'react';
 import { GoSync } from 'react-icons/go';
-import styled from 'styled-components';
 
 import { useFetchSymbolsQuery } from '../store';
-
-const SymbolFormWrapper = styled.form`
-  display: flex;
-`;
-
-const Selector = styled.div`
-  height: 3rem;
-  width: 10rem;
-  border: black 1px solid;
-  border-radius: 4px;
-`;
-
-const SelectorList = styled.div`
-  max-height: 10rem;
-  overflow-y: scroll;
-`;
+import {
+  Form,
+  Field,
+  Label,
+  Error,
+  Dropdown,
+  DropdownItem,
+  DropdownList,
+  Button
+} from './SymbolForm.styles';
 
 type SymbolFormProps = {
   value: string;
@@ -28,21 +21,8 @@ type SymbolFormProps = {
 function SymbolForm({ value, onSubmit }: SymbolFormProps) {
   const [selectedSymbol, setSelectedSymbol] = useState<string>(value);
   const [isOpen, setIsOpen] = useState<boolean>(false);
+  const [symbolError, setSymbolError] = useState<string>('');
   const {data, error, isLoading} = useFetchSymbolsQuery();
-
-  const handleSubmit = (e : FormEvent) => {
-    e.preventDefault();
-    onSubmit(selectedSymbol);
-  };
-
-  const handleChange = (symbol: string) => {
-    setSelectedSymbol(symbol);
-    setIsOpen(false);
-  };
-
-  const handleOpen = () => {
-    setIsOpen(!isOpen);
-  };
 
   if (isLoading) {
     return <GoSync/>;
@@ -52,27 +32,62 @@ function SymbolForm({ value, onSubmit }: SymbolFormProps) {
     return <div>Not found any symbol...</div>
   }
 
-  const renderedSymbols = data.map(symbol => {
-    return <div key={symbol.name} onClick={() => handleChange(symbol.name)}>
+  const handleSubmit = (e : FormEvent) => {
+    e.preventDefault();
+    setIsOpen(false);
+
+    if (data.find(symbol => symbol.name === selectedSymbol)) {
+      onSubmit(selectedSymbol);
+    } else {
+      setSymbolError('Not valid symbol !!!');
+    }
+
+  };
+
+  const handleChange = (e : FormEvent<HTMLInputElement>) => {
+    setSelectedSymbol(e.currentTarget.value);
+    setSymbolError('');
+  };
+
+  const handleSelect = (symbol: string) => {
+    setSelectedSymbol(symbol);
+    setIsOpen(false);
+    setSymbolError('');
+  };
+
+  const handleOpen = () => {
+    setIsOpen(!isOpen);
+  };
+
+  const renderedSymbols = data
+    .filter(symbol => symbol.name.toLowerCase().includes(selectedSymbol.toLowerCase()))
+    .map(symbol =>
+    <DropdownItem key={symbol.name} onClick={() => handleSelect(symbol.name)}>
       {symbol.name}
-    </div>
-  });
+    </DropdownItem>
+  );
 
   return (
-    <SymbolFormWrapper onSubmit={(e) => handleSubmit(e)}>
-      <label className="flex mr-3">Symbol :</label>
+    <Form onSubmit={(e) => handleSubmit(e)}>
+      <Field>
+        <Label>Symbol :</Label>
+        <div>
+          <Dropdown className={symbolError !== '' ? 'error' : ''}value={selectedSymbol} onClick={handleOpen} onChange={handleChange} />
 
-      <Selector onClick={handleOpen} className="w-8">
-        {selectedSymbol}
-      </Selector>
+          {symbolError !== '' && <Error>{symbolError}</Error>}
 
-      {isOpen &&
-        <SelectorList>
-          {renderedSymbols}
-        </SelectorList>
-      }
-      <button>Submit</button>
-    </SymbolFormWrapper>
+          {isOpen &&
+            <div>
+              <DropdownList >
+                {renderedSymbols}
+              </DropdownList>
+            </div>
+          }
+        </div>
+      </Field>
+
+      <Button>Submit</Button>
+    </Form>
   );
 }
 
