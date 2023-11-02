@@ -44,17 +44,19 @@ function SymbolForm({ value, onSubmit }: SymbolFormProps) {
     setIsOpen(!isOpen);
   };
 
-  const renderedSymbols = data?.map(symbol => {
-    return <div key={symbol.name} onClick={() => handleChange(symbol.name)}>
-      {symbol.name}
-    </div>
-  });
-
   if (isLoading) {
     return <GoSync/>;
   } else if (error) {
     return <div>Error while fetching symbols...</div>;
+  } else if (!data) {
+    return <div>Not found any symbol...</div>
   }
+
+  const renderedSymbols = data.map(symbol => {
+    return <div key={symbol.name} onClick={() => handleChange(symbol.name)}>
+      {symbol.name}
+    </div>
+  });
 
   return (
     <SymbolFormWrapper onSubmit={(e) => handleSubmit(e)}>

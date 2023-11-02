@@ -1,5 +1,5 @@
-import { createApi,fetchBaseQuery } from "@reduxjs/toolkit/query/react";
-import { BINANCE_BASE_URL } from "../../config/binance";
+import { createApi,fetchBaseQuery } from '@reduxjs/toolkit/query/react';
+import { BINANCE_BASE_URL } from '../../config/binance';
 import { RestMarketTypes } from '@binance/connector-typescript';
 
 const tickersApi = createApi({
