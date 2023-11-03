@@ -2,20 +2,10 @@ import { FormEvent, useState } from 'react';
 import { GoSync } from 'react-icons/go';
 
 import { useFetchSymbolsQuery } from '../store';
-import {
-  Form,
-  Field,
-  Label,
-  Error,
-  Dropdown,
-  DropdownItem,
-  DropdownList,
-  Button
-} from './SymbolForm.styles';
 
 type SymbolFormProps = {
   value: string;
-  onSubmit: (a: string) => void;
+  onSubmit: (symbol: string) => void;
 };
 
 function SymbolForm({ value, onSubmit }: SymbolFormProps) {
@@ -26,9 +16,11 @@ function SymbolForm({ value, onSubmit }: SymbolFormProps) {
 
   if (isLoading) {
     return <GoSync/>;
-  } else if (error) {
+  }
+  if (error) {
     return <div>Error while fetching symbols...</div>;
-  } else if (!data) {
+  }
+  if (!data) {
     return <div>Not found any symbol...</div>
   }
 
@@ -63,32 +55,36 @@ function SymbolForm({ value, onSubmit }: SymbolFormProps) {
   const renderedSymbols = data
     .filter(symbol => symbol.name.toLowerCase().includes(selectedSymbol.toLowerCase()))
     .map(symbol =>
-    <DropdownItem key={symbol.name} onClick={() => handleSelect(symbol.name)}>
+    <div className="pl-4 pt-1 pb-1 hover:bg-gray-100" key={symbol.name} onClick={() => handleSelect(symbol.name)}>
       {symbol.name}
-    </DropdownItem>
+    </div>
   );
 
   return (
-    <Form onSubmit={(e) => handleSubmit(e)}>
-      <Field>
-        <Label>Symbol :</Label>
+    <form className="flex ml-5 mt-5 mb-5" onSubmit={(e) => handleSubmit(e)}>
+      <div className="flex">
+        <label className="flex items-center mr-4 font-bold">Symbol :</label>
         <div>
-          <Dropdown className={symbolError !== '' ? 'error' : ''}value={selectedSymbol} onClick={handleOpen} onChange={handleChange} />
+          <input
+            className={`flex items-center h-10 border-black border rounded mr-2 w-48 p-5 ${symbolError !== '' && 'border-rose-500'}`}
+            value={selectedSymbol}
+            onClick={handleOpen}
+            onChange={handleChange} />
 
-          {symbolError !== '' && <Error>{symbolError}</Error>}
+          {symbolError !== '' && <div className="text-rose-500 text-xs absolute">{symbolError}</div>}
 
           {isOpen &&
             <div>
-              <DropdownList >
+              <div className="absolute rounded mr-2 w-48 bg-white max-h-48 overflow-y-scroll border border-black">
                 {renderedSymbols}
-              </DropdownList>
+              </div>
             </div>
           }
         </div>
-      </Field>
+      </div>
 
-      <Button>Submit</Button>
-    </Form>
+      <button className="text-white bg-blue-500 hover:bg-blue-600 rounded px-4">Submit</button>
+    </form>
   );
 }
 
