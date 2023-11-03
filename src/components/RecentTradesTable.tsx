@@ -34,7 +34,7 @@ function RecentTrades({ symbol }: { symbol: string}) {
     })
     .map(rowData => {
       return <tr key={rowData.id}>
-        <td className={`p-1 ${rowData.isBuyerMaker ? 'text-emerald-400' : 'text-rose-500'}`} title={rowData.isBuyerMaker && 'Is buyer maker'}>
+        <td className={`p-1 ${rowData.isBuyerMaker ? 'text-emerald-400' : 'text-rose-500'}`} title={rowData.isBuyerMaker ? 'Is buyer maker' : ''}>
           {rowData.price}
         </td>
         <td className="p-1">{rowData.qty}</td>
