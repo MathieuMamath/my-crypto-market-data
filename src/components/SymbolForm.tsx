@@ -2,6 +2,7 @@ import { FormEvent, useState } from 'react';
 import { GoSync } from 'react-icons/go';
 
 import { useFetchSymbolsQuery } from '../store';
+import { useClickAway } from '@uidotdev/usehooks';
 
 type SymbolFormProps = {
   value: string;
@@ -13,6 +14,9 @@ function SymbolForm({ value, onSubmit }: SymbolFormProps) {
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const [symbolError, setSymbolError] = useState<string>('');
   const {data, error, isLoading} = useFetchSymbolsQuery();
+  const ref = useClickAway<HTMLInputElement>(() => {
+    setIsOpen(false);
+  });
 
   if (isLoading) {
     return <GoSync/>;
@@ -52,13 +56,14 @@ function SymbolForm({ value, onSubmit }: SymbolFormProps) {
     setIsOpen(!isOpen);
   };
 
-  const renderedSymbols = data
-    .filter(symbol => symbol.name.toLowerCase().includes(selectedSymbol.toLowerCase()))
+  const filteredSymbols = data.filter(symbol => symbol.name.toLowerCase().includes(selectedSymbol.toLowerCase()));
+
+  const renderedSymbols = filteredSymbols
     .map(symbol =>
-    <div className="pl-4 pt-1 pb-1 hover:bg-gray-100" key={symbol.name} onClick={() => handleSelect(symbol.name)}>
-      {symbol.name}
-    </div>
-  );
+      <div className="pl-4 pt-1 pb-1 hover:bg-gray-100" key={symbol.name} onClick={() => handleSelect(symbol.name)}>
+        {symbol.name}
+      </div>
+    );
 
   return (
     <form className="flex ml-5 mt-5 mb-5" onSubmit={(e) => handleSubmit(e)}>
@@ -73,8 +78,8 @@ function SymbolForm({ value, onSubmit }: SymbolFormProps) {
 
           {symbolError !== '' && <div className="text-rose-500 text-xs absolute">{symbolError}</div>}
 
-          {isOpen &&
-            <div>
+          {isOpen && filteredSymbols.length > 0 &&
+            <div ref={ref}>
               <div className="absolute rounded mr-2 w-48 bg-white max-h-48 overflow-y-scroll border border-black">
                 {renderedSymbols}
               </div>
