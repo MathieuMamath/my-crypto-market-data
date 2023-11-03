@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import SymbolForm from './components/SymbolForm';
 import Ticker from './components/Ticker';
-import RecentTradesList from './components/RecentTradesList';
+import RecentTradesTable from './components/RecentTradesTable';
 
 function App() {
   const [selectedSymbol, setSelectedSymbol] = useState<string>('');
@@ -16,7 +16,7 @@ function App() {
       {selectedSymbol !== '' && (
         <>
           <Ticker symbol={selectedSymbol} />
-          <RecentTradesList symbol={selectedSymbol} />
+          <RecentTradesTable symbol={selectedSymbol} />
         </>
       )}
     </div>
