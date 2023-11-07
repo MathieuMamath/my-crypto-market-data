@@ -23,7 +23,6 @@ function RecentTrades({ symbol }: { symbol: SymbolProps}) {
   const headers = [
     { label:`Price (${symbol.quoteAsset})`, name: 'price' },
     { label:`Quantity (${symbol.baseAsset})`, name: 'qty' },
-    { label:'Volume', name: 'quoteQty' },
     { label:'Time', name: 'time' },
   ];
 
@@ -39,7 +38,6 @@ function RecentTrades({ symbol }: { symbol: SymbolProps}) {
           {rowData.price}
         </td>
         <td className="p-1">{rowData.qty}</td>
-        <td className="p-1">{rowData.quoteQty}</td>
         <td className="p-1">{getDatetime(rowData.time)}</td>
       </tr>;
     });
