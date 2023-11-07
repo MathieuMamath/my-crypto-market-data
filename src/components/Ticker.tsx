@@ -13,9 +13,9 @@ function Ticker({ symbol }: { symbol: string }) {
     { label: '1m', value: '1m' },
     { label: '5m', value: '5m' },
     { label: '15m', value: '15m' },
-    { label: '1 H', value: '1h' },
-    { label: '1 D', value: '1d' },
-    { label: '1 W', value: '7d' },
+    { label: '1H', value: '1h' },
+    { label: '1D', value: '1d' },
+    { label: '1W', value: '7d' },
   ];
   const [selectedWindowSize, setSelectedWindowSize] = useState<WindowSizeProps>({ label: '1 D', value: '1d'});
   const {data, error, isFetching} = useFetchTickerQuery({ symbol, windowSize: selectedWindowSize.value });
@@ -53,17 +53,17 @@ function Ticker({ symbol }: { symbol: string }) {
           {data.weightedAvgPrice}
         </div>
         <div className={'ml-5'}>
-          <div>24h Change</div>
+          <div>{selectedWindowSize.label} Change</div>
           <div className={`font-bold ${parseFloat(data.priceChange) < 0 ? 'text-rose-500' : 'text-emerald-400'}`}>
             {data.priceChange} {data.priceChangePercent}%
           </div>
         </div>
         <div className={'ml-5'}>
-          <div>24h High </div>
+          <div>{selectedWindowSize.label} High</div>
           <div className="font-bold">{data.highPrice}</div>
         </div>
         <div className={'ml-5'}>
-          <div>24h Low</div>
+          <div>{selectedWindowSize.label} Low</div>
           <div className="font-bold">{data.lowPrice}</div>
         </div>
         </div>
