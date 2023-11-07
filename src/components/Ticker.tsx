@@ -30,10 +30,9 @@ function Ticker({ symbol }: { symbol: string }) {
 
   const renderedWindowSizes = windowSizes.map(windowSize => {
     return (
-      <div className="mr-2">
+      <div className="mr-2" key={windowSize.value}>
         <Button
           onClick={() => setSelectedWindowSize(windowSize)}
-          key={windowSize.value}
           disabled={windowSize.value === selectedWindowSize.value}
         >
           {windowSize.label}
