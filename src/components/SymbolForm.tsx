@@ -3,6 +3,7 @@ import { GoSync } from 'react-icons/go';
 
 import { useFetchSymbolsQuery } from '../store';
 import DropdownInput from './DropdownInput';
+import Button from './Button';
 
 type SymbolFormProps = {
   value: string;
@@ -54,7 +55,7 @@ function SymbolForm({ value, onSubmit }: SymbolFormProps) {
         />
       </div>
 
-      <button className="text-white bg-blue-500 hover:bg-blue-600 rounded px-4">Submit</button>
+      <Button primary>Submit</Button>
     </form>
   );
 }
