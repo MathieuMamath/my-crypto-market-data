@@ -11,6 +11,7 @@ interface ButtonProps extends ComponentProps<"button"> {
   danger?: boolean,
   rounded?: boolean,
   outline?: boolean,
+  disabled?: boolean
 }
 
 function Button({
@@ -22,6 +23,7 @@ function Button({
   danger,
   rounded,
   outline,
+  disabled,
   ...rest
 }: ButtonProps) {
 
@@ -32,6 +34,7 @@ function Button({
       'border-green-500 bg-green-500 text-white hover:bg-green-600': success,
       'border-yellow-400 bg-yellow-400 text-white hover:bg-yellow-500': warning,
       'border-red-500 bg-red-500 text-white hover:bg-red-600': danger,
+      'bg-gray-100': disabled,
       'rounded-full': rounded,
       'bg-white': outline,
       'text-blue-500': outline && primary,
@@ -42,7 +45,7 @@ function Button({
     })
   );
 
-  return <button className={classes} {...rest}>{children}</button>
+  return <button disabled={disabled} className={classes} {...rest}>{children}</button>
 }
 
 export default Button;
