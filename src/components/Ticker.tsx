@@ -2,13 +2,15 @@ import { GoSync } from 'react-icons/go';
 import { useFetchTickerQuery } from '../store';
 import { useState } from 'react';
 import Button from './Button';
+import { SymbolProps } from '../store/apis/symbolsApi';
+
 
 interface WindowSizeProps {
   label: string;
   value: string;
 }
 
-function Ticker({ symbol }: { symbol: string }) {
+function Ticker({ symbol }: { symbol: SymbolProps }) {
   const windowSizes = [
     { label: '1m', value: '1m' },
     { label: '5m', value: '5m' },
@@ -18,14 +20,14 @@ function Ticker({ symbol }: { symbol: string }) {
     { label: '1W', value: '7d' },
   ];
   const [selectedWindowSize, setSelectedWindowSize] = useState<WindowSizeProps>({ label: '1 D', value: '1d'});
-  const {data, error, isFetching} = useFetchTickerQuery({ symbol, windowSize: selectedWindowSize.value });
+  const {data, error, isFetching} = useFetchTickerQuery({ symbol: symbol.name, windowSize: selectedWindowSize.value });
 
   if (isFetching) {
     return <GoSync/>;
   } else if (error) {
-    return <div>Error while fetching ticker for {symbol}...</div>;
+    return <div>Error while fetching ticker for {symbol.name}...</div>;
   } else if (!data) {
-    return <div>No ticker information for {symbol}...</div>;
+    return <div>No ticker information for {symbol.name}...</div>;
   }
 
   const renderedWindowSizes = windowSizes.map(windowSize => {

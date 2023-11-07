@@ -4,6 +4,8 @@ import { RestMarketTypes } from '@binance/connector-typescript';
 
 export type SymbolProps = {
   name: string;
+  quoteAsset: string;
+  baseAsset: string;
 };
 
 const symbolsApi = createApi({
@@ -23,7 +25,9 @@ const symbolsApi = createApi({
         transformResponse(reponse: RestMarketTypes.exchangeInformationResponse) {
           return reponse.symbols.map(symbol => {
             return {
-              name: symbol.symbol
+              name: symbol.symbol,
+              baseAsset: symbol.baseAsset,
+              quoteAsset: symbol.quoteAsset
             };
           });
         }

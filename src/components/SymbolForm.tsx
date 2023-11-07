@@ -4,14 +4,15 @@ import { GoSync } from 'react-icons/go';
 import { useFetchSymbolsQuery } from '../store';
 import DropdownInput from './DropdownInput';
 import Button from './Button';
+import { SymbolProps } from '../store/apis/symbolsApi';
 
 type SymbolFormProps = {
-  value: string;
-  onSubmit: (symbol: string) => void;
+  value: SymbolProps;
+  onSubmit: (symbol: SymbolProps) => void;
 };
 
 function SymbolForm({ value, onSubmit }: SymbolFormProps) {
-  const [selectedSymbol, setSelectedSymbol] = useState<string>(value);
+  const [selectedSymbol, setSelectedSymbol] = useState<string>(value.name);
   const [symbolError, setSymbolError] = useState<string>('');
   const {data, error, isLoading} = useFetchSymbolsQuery();
 
@@ -27,17 +28,18 @@ function SymbolForm({ value, onSubmit }: SymbolFormProps) {
 
   const handleSubmit = (e : FormEvent) => {
     e.preventDefault();
+    const submitedSymbol = data.find(symbol => symbol.name === selectedSymbol)
 
-    if (data.find(symbol => symbol.name === selectedSymbol)) {
-      onSubmit(selectedSymbol);
+    if (submitedSymbol) {
+      onSubmit(submitedSymbol);
     } else {
       setSymbolError('Not valid symbol !!!');
     }
 
   };
 
-  const handleChange = (symbol: string) => {
-    setSelectedSymbol(symbol);
+  const handleChange = (symbolName: string) => {
+    setSelectedSymbol(symbolName);
     setSymbolError('');
   };
 

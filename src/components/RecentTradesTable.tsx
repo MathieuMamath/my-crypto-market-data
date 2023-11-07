@@ -4,24 +4,25 @@ import { GoSync } from 'react-icons/go';
 import { getDatetime } from '../services/getDatetime.ts';
 import { useFetchRecentTradesQuery } from '../store/index.ts';
 import RecentTradesTableHeader from './RecentTradesTableHeader.tsx';
+import { SymbolProps } from '../store/apis/symbolsApi';
 
-function RecentTrades({ symbol }: { symbol: string}) {
-  const { data, error, isFetching } = useFetchRecentTradesQuery(symbol);
+function RecentTrades({ symbol }: { symbol: SymbolProps}) {
+  const { data, error, isFetching } = useFetchRecentTradesQuery(symbol.name);
   const [sort, setSort] = useState<{by: string, order: 'asc' | 'desc'}>({ by: '', order: 'asc'});
 
   if (isFetching) {
     return <GoSync/>;
   }
   if (error) {
-    return <div>Error while fetching recent trades for {symbol}...</div>
+    return <div>Error while fetching recent trades for {symbol.name}...</div>
   }
   if (!data) {
-    return <div>No recent trades for {symbol}...</div>
+    return <div>No recent trades for {symbol.name}...</div>
   }
 
   const headers = [
-    { label:'Price', name: 'price' },
-    { label:'Quantity', name: 'qty' },
+    { label:`Price (${symbol.quoteAsset})`, name: 'price' },
+    { label:`Quantity (${symbol.baseAsset})`, name: 'qty' },
     { label:'Volume', name: 'quoteQty' },
     { label:'Time', name: 'time' },
   ];
