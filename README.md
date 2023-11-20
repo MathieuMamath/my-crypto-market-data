@@ -1,5 +1,5 @@
-# Exercise for Flowdesk
-This application is an exercise from Flowdesk.
+# Crypto market data
+This application is an mini project.
 It retrieves and displays market data for a selected pair from Binance public API.
 
 Users are able to use a form to select the currency pair to query. Upon submitting the form, the application fetch public market data (ticker, 24h ticker, recent trades) for
