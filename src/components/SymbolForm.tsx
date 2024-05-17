@@ -2,9 +2,9 @@ import { FormEvent, useState } from 'react';
 import { GoSync } from 'react-icons/go';
 
 import { useFetchSymbolsQuery } from '../store';
-import DropdownInput from './DropdownInput';
-import Button from './Button';
 import { SymbolProps } from '../store/apis/symbolsApi';
+import Button from './Button';
+import DropdownInput from './DropdownInput';
 
 type SymbolFormProps = {
   value: SymbolProps;
@@ -48,7 +48,7 @@ function SymbolForm({ value, onSubmit }: SymbolFormProps) {
   return (
     <form className="flex ml-5 mt-5 mb-5" onSubmit={(e) => handleSubmit(e)}>
       <div className="flex">
-        <label className="flex items-center mr-4 font-bold">Symbol :</label>
+        <label className="flex items-center mr-4 font-bold">Symbol (pair):</label>
         <DropdownInput
           value={selectedSymbol}
           onChange={handleChange}
