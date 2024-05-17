@@ -48,7 +48,7 @@ function SymbolForm({ value, onSubmit }: SymbolFormProps) {
   return (
     <form className="flex ml-5 mt-5 mb-5" onSubmit={(e) => handleSubmit(e)}>
       <div className="flex">
-        <label className="flex items-center mr-4 font-bold">Symbol (pair):</label>
+        <label className="flex items-center mr-4 font-bold">Symbol :</label>
         <DropdownInput
           value={selectedSymbol}
           onChange={handleChange}
