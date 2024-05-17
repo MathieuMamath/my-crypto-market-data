@@ -2,9 +2,9 @@ import { FormEvent, useState } from 'react';
 import { GoSync } from 'react-icons/go';
 
 import { useFetchSymbolsQuery } from '../store';
-import DropdownInput from './DropdownInput';
-import Button from './Button';
 import { SymbolProps } from '../store/apis/symbolsApi';
+import Button from './Button';
+import DropdownInput from './DropdownInput';
 
 type SymbolFormProps = {
   value: SymbolProps;
